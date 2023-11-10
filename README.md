@@ -1,12 +1,14 @@
+(sob construção)
 # Get Started
 
 Para rodar essa API você precisa ter o Docker instalado e configurado.
 
 ## steps 
 - clone
-- run `yarn` 
+- run `npm` 
 - run `docker-compose up`
-- run `yarn start:dev`
+- run `npx prisma migrate dev`
+- run `npm run start:dev`
 
 
 
