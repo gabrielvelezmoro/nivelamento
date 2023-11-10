@@ -12,9 +12,8 @@ datasource db {
 
 model User {
   id     Int     @id @default(autoincrement())
-  email  String  @unique
   name   String?
-  cpf    String
+  cpf    String  @unique
   passwd String
 
   UserProfile UserProfile[]
