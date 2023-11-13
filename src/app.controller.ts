@@ -16,6 +16,7 @@ export class AppController {
     return await this.userRepository.create({ cpf, name, passwd });
   }
 
+  //loga e retorna access token
   @Post('auth/login')
   async login(@Body() userData: { cpf?: string; password: string }) {
     return this.auth.validarUsuario(userData.cpf, userData.password);
