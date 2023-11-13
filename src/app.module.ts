@@ -7,6 +7,8 @@ import { AuthController } from './auth/auth.controller';
 import { PrismaUserRepository } from './repositories/prisma/primaUserRepository';
 import { AuthService } from './auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
+import { ProfileRepository } from './repositories/profileRepository';
+import { PrismaProfileRepository } from './repositories/prisma/prismaProfileRepository';
 
 @Module({
   imports: [AuthModule],
@@ -14,6 +16,7 @@ import { JwtService } from '@nestjs/jwt';
   providers: [
     PrismaService,
     { provide: UserRepository, useClass: PrismaUserRepository },
+    { provide: ProfileRepository, useClass: PrismaProfileRepository },
     AuthService,
     JwtService,
   ],

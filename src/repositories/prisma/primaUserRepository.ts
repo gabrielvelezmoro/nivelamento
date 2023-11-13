@@ -1,17 +1,7 @@
 import { PrismaService } from 'src/database/prisma.service';
-import {
-  IGetUserByCPF,
-  //   CustomerRepository,
-  //   IGetBalanceRequest,
-  //   IListAllResponse,
-  //   IUpdateBalanceRequest,
-  //   IGetBalanceResponse,
-  //   IGetCustomerRequest,
-  //   IGetCustomerResponse,
-  //   IGetCustomerByNumberRequest,
-  UserRepository,
-} from '../userRepository';
+import { IGetUserByCPF, UserRepository } from '../userRepository';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class PrismaUserRepository implements UserRepository {
@@ -26,32 +16,18 @@ export class PrismaUserRepository implements UserRepository {
     cpf: string;
     passwd: string;
   }): Promise<void> {
+    const hashedPasswd = await bcrypt.hash(passwd, 10);
     await this.prisma.user
       .create({
-        data: { name, cpf, passwd },
+        data: { name, cpf, passwd: hashedPasswd },
       })
       .catch(() => {
         throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
       });
   }
 
-  //   async listAll(): Promise<IListAllResponse[]> {
-  //     const customers = await this.prisma.user.findMany().catch(() => {
-  //       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-  //     });
-
-  //     return customers;
-  //   }
-
-  //   async updateBalance(request: IUpdateBalanceRequest): Promise<void> {
-  //     await this.prisma.user.update({
-  //       data: { saldo: request.saldo },
-  //       where: { id: request.id },
-  //     });
-  //   }
-
   async getUserByCPF(cpf: string): Promise<IGetUserByCPF> {
-    const result = await this.prisma.user
+    const result = this.prisma.user
       .findFirst({
         where: { cpf },
       })

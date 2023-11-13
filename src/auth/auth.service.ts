@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from '../repositories/userRepository';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,9 @@ export class AuthService {
       throw new UnauthorizedException('Usuário ou Senha Inválidos');
     }
 
-    if (user.passwd === password) {
+    const isMatch = await bcrypt.compare(password, user.passwd);
+
+    if (isMatch) {
       return await this.gerarToken(cpf);
     }
 
