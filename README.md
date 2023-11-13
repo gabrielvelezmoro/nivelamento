@@ -12,6 +12,5 @@ Para rodar essa API você precisa ter o Docker instalado e configurado.
 
 
 
-# Modelo de entidades: 
-
-- https://gabrielvelezmoro.notion.site/Entidades-7157a8befa684ceb9bb0a2c54548150c
+# Collection no Postman:
+https://elements.getpostman.com/redirect?entityId=16955004-19b3f297-df98-4fdc-9e89-e5e938dff824&entityType=collection
