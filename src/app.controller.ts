@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Patch } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Get } from '@nestjs/common';
 import { AuthService as Auth } from './auth/auth.service';
 import { UserRepository } from './repositories/userRepository';
 import { ProfileRepository } from './repositories/profileRepository';
@@ -39,5 +39,10 @@ export class AppController {
   @Post('auth/login')
   async login(@Body() userData: { cpf?: string; password: string }) {
     return this.auth.validarUsuario(userData.cpf, userData.password);
+  }
+
+  @Get('adm/users')
+  async getUsers() {
+    return this.userRepository.listAllUsersWithProfiles();
   }
 }
