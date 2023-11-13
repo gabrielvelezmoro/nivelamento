@@ -5,17 +5,20 @@ import { UserRepository } from '../repositories/userRepository';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UserRepository,
+    private usersService: UserRepository,
     private jwtService: JwtService,
   ) {}
   async validarUsuario(cpf: string, password: string): Promise<any> {
     const user = await this.usersService.getUserByCPF(cpf);
+
     if (!user) {
       throw new UnauthorizedException('Usuário ou Senha Inválidos');
     }
+
     if (user.passwd === password) {
       return await this.gerarToken(cpf);
     }
+
     throw new UnauthorizedException('Usuário ou Senha Inválidos');
   }
 

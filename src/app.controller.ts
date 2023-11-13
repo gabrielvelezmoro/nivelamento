@@ -1,8 +1,7 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { User as UserModel } from '@prisma/client';
 import { AuthService as Auth } from './auth/auth.service';
 import { UserRepository } from './repositories/userRepository';
-import { CreateUserBody } from './dtos/UserDTO';
+import { CreateUserBody } from './dtos/create-user-body';
 @Controller('api')
 export class AppController {
   constructor(
@@ -17,15 +16,8 @@ export class AppController {
     return await this.userRepository.create({ cpf, name, passwd });
   }
 
-  // @Post('signup')
-  // async signupUser(@Body() userData: UserModel): Promise<UserModel> {
-  //   return this.userRepository.login(userData);
-  // }
-
-  @Post('signin')
-  async(
-    @Body() userData: { cpf?: string; password: string },
-  ): Promise<UserModel> {
+  @Post('auth/login')
+  async login(@Body() userData: { cpf?: string; password: string }) {
     return this.auth.validarUsuario(userData.cpf, userData.password);
   }
 }
