@@ -23,11 +23,12 @@ model User {
 }
 
 model Profile {
-  id          Int           @id @default(autoincrement())
-  ds_profile  String        @unique
-  UserProfile UserProfile[]
-  Recipient   Recipient[]
-  Package     Package[]
+  id               Int                @id @default(autoincrement())
+  ds_profile       String             @unique
+  UserProfile      UserProfile[]
+  Recipient        Recipient[]
+  Package          Package[]
+  RecipientAddress RecipientAddress[]
 }
 
 model UserProfile {
@@ -48,14 +49,26 @@ model Address {
 }
 
 model Recipient {
-  id         Int        @id @default(autoincrement())
-  cep        String
-  address    Profile    @relation(fields: [id_address], references: [id])
-  id_address Int
-  User       User?      @relation(fields: [userId], references: [id])
-  userId     Int?
-  Package    Package[]
-  Delivery   Delivery[]
+  id               Int                @id @default(autoincrement())
+  cep              String
+  address          Profile            @relation(fields: [id_address], references: [id])
+  id_address       Int
+  User             User?              @relation(fields: [userId], references: [id])
+  userId           Int?
+  Package          Package[]
+  Delivery         Delivery[]
+  RecipientAddress RecipientAddress[]
+}
+
+model RecipientAddress {
+  id           Int        @id @default(autoincrement())
+  address      Profile    @relation(fields: [id_address], references: [id])
+  id_address   Int
+  Recipient    Recipient? @relation(fields: [id_recipient], references: [id])
+  id_recipient Int?
+
+  Package  Package[]
+  Delivery Delivery[]
 }
 
 model Package {
@@ -70,17 +83,21 @@ model Package {
   User     User?      @relation(fields: [userId], references: [id])
   userId   Int?
 
-  Profile   Profile? @relation(fields: [profileId], references: [id])
-  profileId Int?
+  Profile            Profile?          @relation(fields: [profileId], references: [id])
+  profileId          Int?
+  RecipientAddress   RecipientAddress? @relation(fields: [recipientAddressId], references: [id])
+  recipientAddressId Int?
 }
 
 model Delivery {
-  id           Int       @id @default(autoincrement())
-  status       String
-  User         User?     @relation(fields: [id_postman], references: [id])
-  id_postman   Int?
-  Recipient    Recipient @relation(fields: [id_recipient], references: [id])
-  id_recipient Int
-  Package      Package?  @relation(fields: [id_package], references: [id])
-  id_package   Int?
+  id                 Int               @id @default(autoincrement())
+  status             String
+  User               User?             @relation(fields: [id_postman], references: [id])
+  id_postman         Int?
+  Recipient          Recipient         @relation(fields: [id_recipient], references: [id])
+  id_recipient       Int
+  Package            Package?          @relation(fields: [id_package], references: [id])
+  id_package         Int?
+  RecipientAddress   RecipientAddress? @relation(fields: [recipientAddressId], references: [id])
+  recipientAddressId Int?
 }
