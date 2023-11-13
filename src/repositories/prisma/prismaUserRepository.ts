@@ -36,4 +36,32 @@ export class PrismaUserRepository implements UserRepository {
       });
     return result;
   }
+
+  listAllUsersWithProfiles(): Promise<any> {
+    const result = this.prisma.user
+      .findMany({
+        select: {
+          id: true,
+          name: true,
+          UserProfile: {
+            include: {
+              profile: {
+                select: {
+                  ds_profile: true,
+                },
+              },
+            },
+          },
+        },
+        // include: {
+        //   UserProfile: {
+        //     include: { profile: { select: { ds_profile: true } } },
+        //   },
+        // },
+      })
+      .catch(() => {
+        throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+      });
+    return result;
+  }
 }

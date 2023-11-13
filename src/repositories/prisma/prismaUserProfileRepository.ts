@@ -11,7 +11,7 @@ export class PrismaUserProfileRepository implements UserProfileRepository {
 
   async createUserProfile(request: ICreateUserProfileRequest): Promise<void> {
     const { id_profile, id_user } = request;
-    await this.prisma.userProfile
+    this.prisma.userProfile
       .create({
         data: { id_profile, id_user },
       })
