@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Patch, Get } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Get, Param } from '@nestjs/common';
 import { AuthService as Auth } from './auth/auth.service';
 import { UserRepository } from './repositories/userRepository';
 import { ProfileRepository } from './repositories/profileRepository';
@@ -15,8 +15,7 @@ export class AppController {
 
   @Post('adm/create-user')
   async createUser(@Body() createUserData: CreateUserBody) {
-    const { cargo, cpf, name, passwd } = createUserData;
-    cargo;
+    const { cpf, name, passwd } = createUserData;
     return await this.userRepository.create({ cpf, name, passwd });
   }
 
@@ -25,6 +24,12 @@ export class AppController {
   async createProfile(@Body() data: { descricao: string }) {
     const { descricao } = data;
     return this.profileRepository.createProfile({ descricao });
+  }
+
+  //lista perfis de acesso
+  @Get('adm/profiles')
+  async getProfiles() {
+    return this.profileRepository.listAllProfiles();
   }
 
   @Patch('adm/update-profile')
@@ -44,5 +49,43 @@ export class AppController {
   @Get('adm/users')
   async getUsers() {
     return this.userRepository.listAllUsersWithProfiles();
+  }
+
+  @Post('adm/deliveryman/create')
+  async createEntregador(@Body() createUserData: CreateUserBody) {
+    const { cpf, name, passwd } = createUserData;
+
+    const response = this.userRepository
+      .create({ cpf, name, passwd })
+      .then(async () => {
+        const user = await this.userRepository.getUserByCPF(cpf);
+        const entregadorProfile = await this.profileRepository.getProfileByDs({
+          ds_profile: 'Entregador',
+        });
+        this.userProfileRepository.createUserProfile({
+          id_user: user.id,
+          id_profile: entregadorProfile.id,
+        });
+      });
+    return response;
+  }
+
+  @Get('adm/deliveryman/find-all')
+  async getEntregador(@Param() createUserData: CreateUserBody) {
+    const { cpf, name, passwd } = createUserData;
+
+    const response = this.userRepository
+      .create({ cpf, name, passwd })
+      .then(async () => {
+        const user = await this.userRepository.getUserByCPF(cpf);
+        const entregadorProfile = await this.profileRepository.getProfileByDs({
+          ds_profile: 'Entregador',
+        });
+        this.userProfileRepository.createUserProfile({
+          id_user: user.id,
+          id_profile: entregadorProfile.id,
+        });
+      });
+    return response;
   }
 }

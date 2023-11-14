@@ -1,5 +1,5 @@
 import { PrismaService } from 'src/database/prisma.service';
-import { IGetUserByCPF, UserRepository } from '../userRepository';
+import { IGetUserByCPFResponse, UserRepository } from '../userRepository';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
@@ -22,11 +22,11 @@ export class PrismaUserRepository implements UserRepository {
         data: { name, cpf, passwd: hashedPasswd },
       })
       .catch(() => {
-        throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+        throw new HttpException('Forbidden', HttpStatus.CONFLICT);
       });
   }
 
-  async getUserByCPF(cpf: string): Promise<IGetUserByCPF> {
+  async getUserByCPF(cpf: string): Promise<IGetUserByCPFResponse> {
     const result = this.prisma.user
       .findFirst({
         where: { cpf },
@@ -37,12 +37,13 @@ export class PrismaUserRepository implements UserRepository {
     return result;
   }
 
-  listAllUsersWithProfiles(): Promise<any> {
+  async listAllUsersWithProfiles(): Promise<any> {
     const result = this.prisma.user
       .findMany({
         select: {
           id: true,
           name: true,
+          cpf: true,
           UserProfile: {
             include: {
               profile: {
@@ -53,11 +54,6 @@ export class PrismaUserRepository implements UserRepository {
             },
           },
         },
-        // include: {
-        //   UserProfile: {
-        //     include: { profile: { select: { ds_profile: true } } },
-        //   },
-        // },
       })
       .catch(() => {
         throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
