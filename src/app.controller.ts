@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Patch, Get } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Get, Param } from '@nestjs/common';
 import { AuthService as Auth } from './auth/auth.service';
 import {
   UserRepository,
@@ -72,6 +72,11 @@ export class AppController {
         });
       });
     return response;
+  }
+  @Get('adm/deliveryman/:id')
+  async getEntregadoresById(@Param() param): Promise<any> {
+    const { id } = param;
+    return this.deliverymanRepository.getDeliverymanById({ id });
   }
 
   @Get('adm/deliveryman/find-all')

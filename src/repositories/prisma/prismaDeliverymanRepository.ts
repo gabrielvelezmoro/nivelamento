@@ -41,11 +41,32 @@ export class PrismaDeliverymanRepository implements DeliverymanRepository {
     }
   }
 
-  getDeliverymanById(
-    request: IGetDeliverymanByIdRequest,
-  ): Promise<IGetDeliverymanByIdResponse> {
+  async getDeliverymanById({ id }: { id: string }): Promise<any> {
+    console.log(id);
+    const numberId = Number(id);
     try {
-      return;
+      const result = await this.prisma.user.findMany({
+        select: {
+          id: true,
+          name: true,
+          cpf: true,
+          UserProfile: {
+            include: {
+              profile: {
+                select: {
+                  ds_profile: true,
+                },
+              },
+            },
+          },
+        },
+        where: {
+          id: Number(numberId),
+          UserProfile: { some: { profile: { ds_profile: 'Entregador' } } },
+        },
+      });
+      console.log(result);
+      return result;
     } catch (error) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     }

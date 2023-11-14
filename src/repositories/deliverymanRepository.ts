@@ -1,8 +1,6 @@
 export abstract class DeliverymanRepository {
   abstract listAllDeliveryman(): Promise<IListAllDeliverymanResponse>;
-  abstract getDeliverymanById(
-    request: IGetDeliverymanByIdRequest,
-  ): Promise<IGetDeliverymanByIdResponse>;
+  abstract getDeliverymanById({ id }: { id: string }): Promise<any>;
   abstract updateDeliveryman(request: IUpdateDeliverymanRequest): Promise<void>;
   abstract deleteDeliverymanById(
     request: IDeleteDeliverymanRequest,
@@ -19,9 +17,7 @@ export interface IListAllDeliverymanResponse {
   deliveryman: IDeliveryMan[];
 }
 export interface IGetDeliverymanByIdRequest {
-  id: number;
-  name: string;
-  cpf: string;
+  id: string;
 }
 
 export interface IGetDeliverymanByIdResponse {
