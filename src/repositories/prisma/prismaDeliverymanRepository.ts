@@ -16,8 +16,22 @@ export class PrismaDeliverymanRepository implements DeliverymanRepository {
   async listAllDeliveryman(): Promise<IListAllDeliverymanResponse> {
     try {
       const result = await this.prisma.user.findMany({
-        include: {
-          UserProfile: { where: { profile: { ds_profile: 'Entregador' } } },
+        select: {
+          id: true,
+          name: true,
+          cpf: true,
+          UserProfile: {
+            include: {
+              profile: {
+                select: {
+                  ds_profile: true,
+                },
+              },
+            },
+          },
+        },
+        where: {
+          UserProfile: { some: { profile: { ds_profile: 'Entregador' } } },
         },
       });
 

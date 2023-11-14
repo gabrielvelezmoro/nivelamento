@@ -1,8 +1,11 @@
-import { Controller, Post, Body, Patch, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Get } from '@nestjs/common';
 import { AuthService as Auth } from './auth/auth.service';
-import { UserRepository } from './repositories/userRepository';
-import { ProfileRepository } from './repositories/profileRepository';
-import { UserProfileRepository } from './repositories/userProfileRepository';
+import {
+  UserRepository,
+  ProfileRepository,
+  UserProfileRepository,
+  DeliverymanRepository,
+} from './repositories';
 import { CreateUserBody, CreateUserProfileBody } from './dtos';
 @Controller('api')
 export class AppController {
@@ -11,6 +14,7 @@ export class AppController {
     private profileRepository: ProfileRepository,
     private userProfileRepository: UserProfileRepository,
     private auth: Auth,
+    private deliverymanRepository: DeliverymanRepository,
   ) {}
 
   @Post('adm/create-user')
@@ -71,21 +75,7 @@ export class AppController {
   }
 
   @Get('adm/deliveryman/find-all')
-  async getEntregador(@Param() createUserData: CreateUserBody) {
-    const { cpf, name, passwd } = createUserData;
-
-    const response = this.userRepository
-      .create({ cpf, name, passwd })
-      .then(async () => {
-        const user = await this.userRepository.getUserByCPF(cpf);
-        const entregadorProfile = await this.profileRepository.getProfileByDs({
-          ds_profile: 'Entregador',
-        });
-        this.userProfileRepository.createUserProfile({
-          id_user: user.id,
-          id_profile: entregadorProfile.id,
-        });
-      });
-    return response;
+  async getEntregadores() {
+    return this.deliverymanRepository.listAllDeliveryman();
   }
 }
