@@ -1,6 +1,6 @@
 export abstract class UserRepository {
   abstract create(request: ICreateUserRequest): Promise<void>;
-  abstract getUserByCPF(cpf: string): Promise<IGetUserByCPF>;
+  abstract getUserByCPF(cpf: string): Promise<IGetUserByCPFResponse>;
   abstract listAllUsersWithProfiles(): Promise<any>;
 }
 
@@ -10,7 +10,8 @@ export interface ICreateUserRequest {
   passwd: string;
 }
 
-export interface IGetUserByCPF {
+export interface IGetUserByCPFResponse {
+  id: number;
   name: string;
   cpf: string;
   passwd: string;

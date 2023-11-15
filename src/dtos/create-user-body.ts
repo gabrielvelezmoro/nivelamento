@@ -12,9 +12,4 @@ export class CreateUserBody {
 
   @IsNotEmpty({ message: 'CPF obrigatório.' })
   cpf: string;
-
-  @IsNotEmpty({
-    message: 'Deve se atribuir um cargo ao usuario. Seja ADM ou Entregador',
-  })
-  cargo: string;
 }

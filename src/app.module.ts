@@ -10,10 +10,14 @@ import {
   PrismaProfileRepository,
   PrismaUserProfileRepository,
   PrismaUserRepository,
+  PrismaDeliverymanRepository,
 } from './repositories/prisma';
-import { UserRepository } from './repositories/userRepository';
-import { ProfileRepository } from './repositories/profileRepository';
-import { UserProfileRepository } from './repositories/userProfileRepository';
+import {
+  UserRepository,
+  ProfileRepository,
+  UserProfileRepository,
+  DeliverymanRepository,
+} from './repositories';
 
 @Module({
   imports: [AuthModule],
@@ -23,6 +27,7 @@ import { UserProfileRepository } from './repositories/userProfileRepository';
     { provide: UserRepository, useClass: PrismaUserRepository },
     { provide: ProfileRepository, useClass: PrismaProfileRepository },
     { provide: UserProfileRepository, useClass: PrismaUserProfileRepository },
+    { provide: DeliverymanRepository, useClass: PrismaDeliverymanRepository },
     AuthService,
     JwtService,
   ],
