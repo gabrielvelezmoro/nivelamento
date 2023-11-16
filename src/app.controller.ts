@@ -1,4 +1,13 @@
-import { Controller, Post, Body, Patch, Get, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Patch,
+  Get,
+  Param,
+  Delete,
+  Put,
+} from '@nestjs/common';
 import { AuthService as Auth } from './auth/auth.service';
 import {
   UserRepository,
@@ -55,6 +64,8 @@ export class AppController {
     return this.userRepository.listAllUsersWithProfiles();
   }
 
+  //CRUD ENTREGADOR
+
   @Post('adm/deliveryman/create')
   async createEntregador(@Body() createUserData: CreateUserBody) {
     const { cpf, name, passwd } = createUserData;
@@ -73,14 +84,28 @@ export class AppController {
       });
     return response;
   }
+
+  @Get('adm/deliveryman/list-all')
+  async listAllEntregadores() {
+    return this.deliverymanRepository.listAllDeliveryman();
+  }
   @Get('adm/deliveryman/:id')
   async getEntregadoresById(@Param() param): Promise<any> {
     const { id } = param;
     return this.deliverymanRepository.getDeliverymanById({ id });
   }
 
-  @Get('adm/deliveryman/find-all')
-  async getEntregadores() {
-    return this.deliverymanRepository.listAllDeliveryman();
+  @Put('adm/deliveryman/update/:id')
+  async updateEntregador(@Param() param, @Body() body) {
+    const { id } = param;
+    const { cpf, name } = body;
+    return this.deliverymanRepository.updateDeliveryman({ id, cpf, name });
+  }
+
+  @Delete('adm/deliveryman/remove/:id')
+  async getEntregadores(@Param() param) {
+    const { id } = param;
+
+    return this.deliverymanRepository.deleteDeliverymanById(Number(id));
   }
 }
