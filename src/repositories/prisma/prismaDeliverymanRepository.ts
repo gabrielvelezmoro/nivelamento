@@ -1,7 +1,9 @@
 import { PrismaService } from 'src/database/prisma.service';
 import {
   DeliverymanRepository,
+  IDeleteDeliverymanRequest,
   IGetDeliverymanByIdRequest,
+  IGetDeliverymanByIdResponse,
   IListAllDeliverymanResponse,
   IUpdateDeliverymanRequest,
 } from '../deliverymanRepository';
@@ -39,7 +41,9 @@ export class PrismaDeliverymanRepository implements DeliverymanRepository {
     }
   }
 
-  async getDeliverymanById(request: IGetDeliverymanByIdRequest): Promise<any> {
+  async getDeliverymanById({ id }: { id: string }): Promise<any> {
+    console.log(id);
+    const numberId = Number(id);
     try {
       const result = await this.prisma.user.findMany({
         select: {
@@ -57,31 +61,28 @@ export class PrismaDeliverymanRepository implements DeliverymanRepository {
           },
         },
         where: {
-          id: Number(request.id),
+          id: Number(numberId),
           UserProfile: { some: { profile: { ds_profile: 'Entregador' } } },
         },
       });
+      console.log(result);
       return result;
     } catch (error) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     }
   }
 
-  async updateDeliveryman(request: IUpdateDeliverymanRequest): Promise<void> {
+  updateDeliveryman(request: IUpdateDeliverymanRequest): Promise<void> {
     try {
-      await this.prisma.user.update({
-        data: { cpf: request.cpf, name: request.name },
-        where: { id: Number(request.id) },
-      });
+      return;
     } catch (error) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     }
   }
 
-  async deleteDeliverymanById(id: number): Promise<void> {
+  deleteDeliverymanById(request: IDeleteDeliverymanRequest): Promise<void> {
     try {
-      console.log(id);
-      await this.prisma.user.delete({ where: { id: id } });
+      return;
     } catch (error) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     }
